@@ -3,12 +3,9 @@ using SellBooksNow.Gateway.Models;
 using SellBooksNow.Gateway.Dtos;
 using VirtualLibrary.Books.Services.Event;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Connections;
 using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Threading.Channels;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace SellBooksNow.Gateway.Controllers
 {

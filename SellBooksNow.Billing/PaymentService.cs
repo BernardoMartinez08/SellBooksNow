@@ -1,11 +1,9 @@
 ﻿using System.Text;
-using System.Transactions;
-using Microsoft.VisualBasic;
+
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using SellBooksNow.Billing.Dtos;
-using SellBooksNow.Billing.Models;
 using Transaction = SellBooksNow.Billing.Models.Transaction;
 using TransactionStatus = SellBooksNow.Billing.Models.TransactionStatus;
 
