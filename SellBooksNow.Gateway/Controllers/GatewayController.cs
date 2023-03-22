@@ -101,6 +101,7 @@ namespace SellBooksNow.Gateway.Controllers
                     channel.BasicPublish(string.Empty, "billing-information", null, body);
                 }
             }
+            UpdateTransaction();
         }
 
         private void sendBookInformation(BookInformationDataTransferObjet book_information)
@@ -121,9 +122,10 @@ namespace SellBooksNow.Gateway.Controllers
                     channel.BasicPublish(string.Empty, "books-queue", null, body);
                 }
             }
+            UpdateTransaction();
         }
 
-        public void UpdateTransaction(CancellationToken cancellationToken)
+        public void UpdateTransaction()
         {
             _channel.QueueDeclare("transaction_result", false, false, false, null);
             _consumer.Received += async (model, content) =>
