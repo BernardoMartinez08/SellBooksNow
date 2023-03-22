@@ -9,8 +9,7 @@ using SellBooksNow.Billing.Models;
 using Transaction = SellBooksNow.Billing.Models.Transaction;
 using TransactionStatus = SellBooksNow.Billing.Models.TransactionStatus;
 
-namespace TicketShop.Payments;
-
+namespace SellBooksNow.Billing;
 public class PaymentService : BackgroundService
 {
     private readonly IConnection _connection;
@@ -41,11 +40,11 @@ public class PaymentService : BackgroundService
             var message = $"El pago para el libro {billingInformation.book_information.Isbn} se proceso con estado {paymentResult.transaction.Status}";
             Console.WriteLine(message);
         };
-        _channel.BasicConsume("payment-queue", true, _consumer);
+        _channel.BasicConsume("billing-information", true, _consumer);
         return Task.CompletedTask;
     }
 
-    private void NotifyPaymentResult()
+    private void NotifyPaymentResult(Guid id_transaction)
     {
         var factory = new ConnectionFactory
         {
@@ -58,12 +57,33 @@ public class PaymentService : BackgroundService
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare("payment-results", false, false, false, null);
-                var json = JsonConvert.SerializeObject("Libro Cobrado");
+                var json = JsonConvert.SerializeObject(id_transaction);
                 var body = Encoding.UTF8.GetBytes(json);
                 channel.BasicPublish(string.Empty, "payment-results", null, body);
             }
         }
     }
+
+    private void NotifyPaymentProcess(Guid id_transaction)
+    {
+        var factory = new ConnectionFactory
+        {
+            HostName = "localhost",
+            Port = 5672
+        };
+
+        using (var connection = factory.CreateConnection())
+        {
+            using (var channel = connection.CreateModel())
+            {
+                channel.QueueDeclare("transaction_result", false, false, false, null);
+                var json = JsonConvert.SerializeObject(id_transaction.ToString());
+                var body = Encoding.UTF8.GetBytes(json);
+                channel.BasicPublish(string.Empty, "transaction_result", null, body);
+            }
+        }
+    }
+
     private async Task<BillingDataTransferObject> ProcessPayment(BillingDataTransferObject billingInformation,CancellationToken token)
     {
         var errors = new List<string>();
@@ -89,7 +109,8 @@ public class PaymentService : BackgroundService
 
         if(errors.Any()){
             billingInformation.transaction.Status = TransactionStatus.Charged;
-            NotifyPaymentResult();
+            NotifyPaymentProcess(billingInformation.transaction.Id);
+            NotifyPaymentResult(billingInformation.transaction.Id);
         }
 
         return billingInformation;

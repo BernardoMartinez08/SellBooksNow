@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Connections;
 using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Threading.Channels;
 using static System.Reflection.Metadata.BlobBuilder;
 
 namespace SellBooksNow.Gateway.Controllers
@@ -123,6 +124,29 @@ namespace SellBooksNow.Gateway.Controllers
                     channel.BasicPublish(string.Empty, "books-queue", null, body);
                 }
             }
+        }
+
+        public void UpdateTransaction(CancellationToken cancellationToken)
+        {
+            _channel.QueueDeclare("transaction_result", false, false, false, null);
+            _consumer.Received += async (model, content) =>
+            {
+                var body = content.Body.ToArray();
+                var json = Encoding.UTF8.GetString(body);
+
+                var transaction = _transactions.SingleOrDefault(x => x.Id.ToString().Equals(json));
+                var new_transaction = new Transaction
+                {
+                    Id = transaction.Id,
+                    Status = TransactionStatus.Completed,
+                };
+
+                int indice = _transactions.FindIndex(x => x.Id.ToString().Equals(json));
+                _transactions.RemoveAt(indice);
+                _transactions.Insert(indice, new_transaction);
+
+            };
+            _channel.BasicConsume("transaction_result", true, _consumer);
         }
     }
 }

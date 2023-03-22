@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SellBooksNow.Books", "SellB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SellBooksNow.Billing", "SellBooksNow.Billing\SellBooksNow.Billing.csproj", "{833FB286-6F5A-496E-8CA3-A40D3E4014CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SellBooksNow.Shipping", "SellBooksNow.Shipping\SellBooksNow.Shipping.csproj", "{736C1C7A-6064-46A9-9CB0-EE9B23621674}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{833FB286-6F5A-496E-8CA3-A40D3E4014CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{833FB286-6F5A-496E-8CA3-A40D3E4014CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{833FB286-6F5A-496E-8CA3-A40D3E4014CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{736C1C7A-6064-46A9-9CB0-EE9B23621674}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{736C1C7A-6064-46A9-9CB0-EE9B23621674}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{736C1C7A-6064-46A9-9CB0-EE9B23621674}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{736C1C7A-6064-46A9-9CB0-EE9B23621674}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
